@@ -25,6 +25,10 @@
       <date-part name="day"/>
     </date>
     <terms>
+      <term name="collection-editor" form="long">
+        <single>editor</single>
+        <multiple>editors</multiple>
+      </term>
       <term name="retrieved">available</term>
       <term name="section" form="short">sect.</term>
     </terms>
@@ -58,7 +62,7 @@
   <macro name="editor">
     <group delimiter=": ">
       <choose>
-        <if type="chapter paper-conference" match="any">
+        <if type="chapter paper-conference entry-dictionary entry-encyclopedia" match="any">
           <text term="in" text-case="capitalize-first"/>
         </if>
       </choose>
@@ -106,7 +110,7 @@
   </macro>
   <macro name="container-title">
     <choose>
-      <if type="article-journal article-magazine chapter paper-conference article-newspaper" match="any">
+      <if type="article-journal article-magazine chapter paper-conference article-newspaper review review-book entry-dictionary entry-encyclopedia" match="any">
         <group suffix="." delimiter=" ">
           <text variable="container-title" form="short" strip-periods="true"/>
           <choose>
@@ -131,14 +135,24 @@
         </group>
       </else-if>
       <else>
-        <text variable="container-title" suffix="." form="short"/>
+        <group delimiter=", " suffix=".">
+          <choose>
+            <if variable="collection-title" match="none">
+              <group delimiter=" ">
+                <label variable="volume" form="short" text-case="capitalize-first"/>
+                <text variable="volume"/>
+              </group>
+            </if>
+          </choose>
+          <text variable="container-title"/>
+        </group>
       </else>
     </choose>
   </macro>
   <macro name="title">
     <text variable="title"/>
     <choose>
-      <if type="article-journal article-magazine chapter paper-conference article-newspaper" match="none">
+      <if type="article-journal article-magazine chapter paper-conference article-newspaper review review-book entry-dictionary entry-encyclopedia" match="none">
         <choose>
           <if variable="URL">
             <text term="internet" prefix=" [" suffix="]" text-case="capitalize-first"/>
@@ -168,7 +182,7 @@
   </macro>
   <macro name="date">
     <choose>
-      <if type="article-journal article-magazine article-newspaper" match="any">
+      <if type="article-journal article-magazine article-newspaper review review-book" match="any">
         <group suffix=";" delimiter=" ">
           <date variable="issued" form="text"/>
           <text macro="accessed-date"/>
@@ -203,7 +217,7 @@
   </macro>
   <macro name="pages">
     <choose>
-      <if type="article-journal article-magazine article-newspaper" match="any">
+      <if type="article-journal article-magazine article-newspaper review review-book" match="any">
         <text variable="page" prefix=":"/>
       </if>
       <else>
@@ -216,7 +230,7 @@
   </macro>
   <macro name="journal-location">
     <choose>
-      <if type="article-journal article-magazine" match="any">
+      <if type="article-journal article-magazine review review-book" match="any">
         <text variable="volume"/>
         <text variable="issue" prefix="(" suffix=")"/>
       </if>
@@ -251,6 +265,29 @@
       </group>
     </layout>
   </citation>
+  <macro name="series-details">
+    <choose>
+      <if type="article-journal article-magazine article-newspaper review review-book" match="none">
+        <choose>
+          <if variable="collection-title">
+            <group delimiter=" " prefix="(" suffix=")">
+              <names variable="collection-editor" suffix=".">
+                <name sort-separator=" " initialize-with="" name-as-sort-order="all" delimiter=", " delimiter-precedes-last="always"/>
+                <label form="long" prefix=", "/>
+              </names>
+              <group delimiter="; ">
+                <text variable="collection-title"/>
+                <group delimiter=" ">
+                  <label variable="volume" form="short"/>
+                  <text variable="volume"/>
+                </group>
+              </group>
+            </group>
+          </if>
+        </choose>
+      </if>
+    </choose>
+  </macro>
   <bibliography et-al-min="7" et-al-use-first="6" hanging-indent="true">
     <sort>
       <key macro="author"/>
@@ -272,6 +309,7 @@
           <text macro="pages"/>
         </group>
       </group>
+      <text macro="series-details" suffix=". "/>
       <text macro="report-details" suffix=". "/>
       <text macro="access"/>
     </layout>

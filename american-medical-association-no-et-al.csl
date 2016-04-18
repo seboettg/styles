@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<style xmlns="http://purl.org/net/xbiblio/csl" class="in-text" version="1.0" demote-non-dropping-particle="sort-only" default-locale="en-US">
+<style xmlns="http://purl.org/net/xbiblio/csl" class="in-text" version="1.0" demote-non-dropping-particle="sort-only" default-locale="en-US" page-range-format="expanded">
   <info>
     <title>American Medical Association (no "et al.")</title>
     <title-short>AMA</title-short>
@@ -52,9 +52,13 @@
             <text variable="DOI"/>
           </if>
           <else-if variable="URL">
-            <text value="Available at:" suffix=" "/>
             <group delimiter=". ">
               <text variable="URL"/>
+              <choose>
+                <if type="webpage">
+                  <date variable="issued" prefix="Published " form="text"/>
+                </if>
+              </choose>
               <group>
                 <text term="accessed" text-case="capitalize-first" suffix=" "/>
                 <date variable="accessed">
@@ -118,8 +122,10 @@
       <choose>
         <if type="bill book graphic legislation motion_picture report song" match="any">
           <group suffix="." prefix=" " delimiter=" ">
-            <text term="volume" form="short" text-case="capitalize-first" strip-periods="true"/>
-            <text variable="volume" suffix="."/>
+            <group delimiter=" ">
+              <text term="volume" form="short" text-case="capitalize-first" strip-periods="true"/>
+              <text variable="volume" suffix="."/>
+            </group>
             <text macro="edition"/>
             <text macro="editor" prefix="(" suffix=")"/>
           </group>
@@ -136,8 +142,10 @@
             <text term="in" text-case="capitalize-first" suffix=":"/>
             <text macro="editor"/>
             <text variable="container-title" font-style="italic" suffix="." text-case="title"/>
-            <text term="volume" form="short" text-case="capitalize-first" strip-periods="true"/>
-            <text variable="volume" suffix="."/>
+            <group delimiter=" ">
+              <text term="volume" form="short" text-case="capitalize-first" strip-periods="true"/>
+              <text variable="volume" suffix="."/>
+            </group>
             <text macro="edition"/>
             <text variable="collection-title" suffix="."/>
             <group suffix=".">
@@ -204,13 +212,16 @@
             </date>
           </group>
         </else-if>
+        <else-if type="webpage">
+          <text variable="container-title" prefix=" " suffix="."/>
+        </else-if>
         <else>
           <text macro="editor" prefix=" " suffix="."/>
           <group prefix=" " suffix=".">
-            <text variable="container-title" font-style="italic" form="short"/>
+            <text variable="container-title" font-style="italic" form="short" strip-periods="true" suffix="."/>
             <group delimiter=";" prefix=" ">
               <choose>
-                <if match="any" variable="issue volume">
+                <if variable="issue volume" match="any">
                   <date variable="issued">
                     <date-part name="year"/>
                   </date>

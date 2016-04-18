@@ -5,13 +5,13 @@
     <id>http://www.zotero.org/styles/university-college-lillebaelt-apa</id>
     <link href="http://www.zotero.org/styles/university-college-lillebaelt-apa" rel="self"/>
     <link href="http://www.zotero.org/styles/apa" rel="template"/>
-    <link href="http://esdhweb.ucl.dk/480836.Formm%C3%A6ssige%20krav%202014.pdf" rel="documentation"/>
+    <link href="http://esdhweb.ucl.dk/476790.Formm%C3%A6ssige%20krav%202014.pdf" rel="documentation"/>
     <author>
       <name>Roald Erik Frøsig</name>
       <email>roaldfrosig@gmail.com</email>
     </author>
     <category citation-format="author-date"/>
-    <updated>2015-01-31T22:51:54+00:00</updated>
+    <updated>2015-04-16T01:55:02+00:00</updated>
     <rights license="http://creativecommons.org/licenses/by-sa/3.0/">This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 License</rights>
   </info>
   <locale xml:lang="da">
@@ -19,6 +19,7 @@
       <term name="accessed">lokaliseret</term>
       <term name="no date" form="short">u.å.</term>
       <term name="in">i:</term>
+      <term name="et-al">et al.</term>
     </terms>
   </locale>
   <locale xml:lang="en">
@@ -60,6 +61,7 @@
     <choose>
       <if type="entry-dictionary entry-encyclopedia chapter" match="any">
         <names variable="author">
+          <name name-as-sort-order="all"/>
           <substitute>
             <text macro="title"/>
           </substitute>
@@ -67,8 +69,8 @@
       </if>
       <else>
         <names variable="author">
-          <name/>
-          <label form="short" prefix=" (" suffix=")" text-case="capitalize-first"/>
+          <name name-as-sort-order="all"/>
+          <label form="short" prefix=" (" suffix=")." text-case="capitalize-first"/>
           <substitute>
             <names variable="editor"/>
             <choose>
@@ -86,23 +88,34 @@
     <!---                                                                                                                                                                              MACRO: author-short -->
     <choose>
       <if type="bill" match="any">
-        <group delimiter=" ">
-          <text value="Lovforslag" font-style="italic"/>
-          <text variable="number" prefix="nr. " font-style="italic"/>
-          <date variable="issued">
-            <date-part name="year" font-style="italic"/>
-          </date>
+        <group delimiter=". ">
+          <names variable="author"/>
+          <group delimiter=" ">
+            <text value="Lovforslag"/>
+            <text variable="number" prefix="nr. "/>
+            <date variable="issued">
+              <date-part name="year"/>
+            </date>
+          </group>
         </group>
       </if>
-      <else-if type="legislation" position="first">
-        <text variable="title" font-style="italic"/>
-        <group prefix=", " delimiter=": ">
-          <text value="herefter kaldet"/>
-          <text variable="title-short" font-style="italic"/>
-        </group>
-      </else-if>
-      <else-if type="legislation" position="subsequent">
-        <text variable="title" form="short" font-style="italic"/>
+      <else-if type="legislation">
+        <choose>
+          <if variable="author">
+            <names variable="author"/>
+            <text variable="volume" prefix=", "/>
+          </if>
+          <else-if type="legislation" position="first">
+            <text variable="title"/>
+            <group prefix=", " delimiter=": ">
+              <text value="herefter kaldet"/>
+              <text variable="title-short"/>
+            </group>
+          </else-if>
+          <else-if type="legislation" position="subsequent">
+            <text variable="title" form="short" font-style="italic"/>
+          </else-if>
+        </choose>
       </else-if>
       <else>
         <names variable="author">
@@ -154,12 +167,7 @@
           <else-if variable="URL">
             <group delimiter=" ">
               <text term="accessed" text-case="capitalize-first"/>
-              <date variable="accessed" delimiter=" ">
-                <date-part name="day" suffix="."/>
-                <date-part name="month" text-case="lowercase"/>
-                <date-part name="year"/>
-              </date>
-              <text term="at"/>
+              <text term="from"/>
               <text variable="URL" text-decoration="underline"/>
             </group>
           </else-if>
@@ -471,18 +479,25 @@
     <!---                                                                                                                                                                              MACRO: legal-cites -->
     <choose>
       <if type="legal_case legislation" match="any">
-        <text variable="volume" prefix=", "/>
-        <date variable="issued" prefix=" af ">
-          <date-part name="day" suffix=". "/>
-          <date-part name="month" text-case="lowercase" suffix=" "/>
+        <choose>
+          <if variable="number">
+            <text variable="number" prefix=", "/>
+          </if>
+          <else>
+            <text variable="volume" prefix=", "/>
+          </else>
+        </choose>
+        <date variable="issued" prefix=" af " delimiter="/">
+          <date-part name="day"/>
+          <date-part name="month" form="numeric-leading-zeros"/>
           <date-part name="year"/>
         </date>
       </if>
       <else-if type="bill">
         <group delimiter=" " prefix=", ">
-          <text variable="number" font-style="italic"/>
+          <text variable="number"/>
           <date variable="issued" form="text">
-            <date-part name="year" range-delimiter="-" font-style="italic"/>
+            <date-part name="year" range-delimiter="-"/>
           </date>
         </group>
       </else-if>
@@ -501,7 +516,7 @@
       </group>
     </layout>
   </citation>
-  <bibliography hanging-indent="true" et-al-min="6" et-al-use-first="1" entry-spacing="0" line-spacing="2" name-as-sort-order="all">
+  <bibliography hanging-indent="true" et-al-min="6" et-al-use-first="1" entry-spacing="0" line-spacing="2">
     <sort>
       <key macro="author"/>
       <key macro="issued-sort" sort="ascending"/>
@@ -510,7 +525,7 @@
     <layout>
       <group suffix=".">
         <group delimiter=". ">
-          <group delimiter=". ">
+          <group delimiter=" ">
             <text macro="author"/>
             <text macro="issued"/>
           </group>
